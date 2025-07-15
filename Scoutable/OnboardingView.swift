@@ -5,10 +5,6 @@
 //  Created by Alex Beattie on 7/14/25.
 //
 import SwiftUI
-
-
-// MARK: - Onboarding Flow (OnboardingView.swift)
-/// A view that mimics the "Sign Up As" screen from the mockups.
 // MARK: - Onboarding Flow (OnboardingView.swift)
 /// A view that mimics the "Sign Up As" screen from the mockups.
 struct OnboardingView: View {

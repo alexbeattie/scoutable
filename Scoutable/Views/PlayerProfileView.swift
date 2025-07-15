@@ -6,18 +6,15 @@
 //
 import SwiftUI
 
-
-// MARK: - Player Profile (PlayerProfileView.swift)
-/// A detailed view that displays a player's profile, based on the mockups.
-// MARK: - Player Profile (PlayerProfileView.swift)
-/// A detailed view that displays a player's profile, based on the mockups.
 struct PlayerProfileView: View {
     let player: Player
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                ProfileHeaderView(player: player)
+                // FIX: Removed the 'player' parameter from this call
+                ProfileHeaderView(name: player.fullName, title: "\(player.sport) Athlete | Class of \(String(player.graduationYear))")
+                
                 ProfileStatsGridView(player: player)
                     .padding(.horizontal)
                 
@@ -49,10 +46,9 @@ struct PlayerProfileView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-struct PlayerProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            PlayerProfileView(player: samplePlayer)
-        }
-    }
+
+// Note: The #Preview block is a modern replacement for PreviewProvider
+// It's good practice, but ensure your Xcode version supports it.
+#Preview {
+    PlayerProfileView(player: .init(firstName: "Alex", lastName: "Beattie", profileImageName: "", sport: "Basketball", graduationYear: 2025, highSchool: "Westwood High School", location: "Los Angeles, CA", utr: 0, stars: 5, gpa: 4.0, videos: [], upcomingEvents: []))
 }

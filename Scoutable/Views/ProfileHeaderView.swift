@@ -9,8 +9,10 @@ import SwiftUI
 
 // --- Helper Views for Profile ---
 
+// --- Helper Views for Profile ---
 struct ProfileHeaderView: View {
-    let player: Player
+    let name: String
+    let title: String
     
     var body: some View {
         VStack {
@@ -20,15 +22,11 @@ struct ProfileHeaderView: View {
                 .clipShape(Circle())
                 .padding(.top)
             
-            Text("\(player.firstName) \(player.lastName)")
+            Text(name)
                 .font(.title)
                 .fontWeight(.bold)
             
-            Text("\(player.sport) Athlete | Class of \(String(player.graduationYear))")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Text(player.location)
+            Text(title)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
