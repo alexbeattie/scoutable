@@ -125,8 +125,8 @@ struct PlayerProfileView: View {
                     
                     Button(action: { showingContactSheet = true }) {
                         Label("Contact Player", systemImage: "message")
-                    }
-                    
+                }
+                
                     Button(action: {}) {
                         Label("Share Profile", systemImage: "square.and.arrow.up")
                     }
@@ -515,8 +515,8 @@ struct AchievementItem: View {
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
-    }
-}
+            }
+        }
 
 /// Course item
 struct CourseItem: View {

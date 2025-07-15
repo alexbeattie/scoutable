@@ -374,8 +374,8 @@ struct EditProfileView: View {
 #Preview {
     VStack {
         ProfileHeaderView(
-            name: "Aaron Sandler",
-            title: "Tennis Athlete | Class of 2025",
+            name: "Alex Beattie",
+            title: "Player",
             player: samplePlayer
         )
         

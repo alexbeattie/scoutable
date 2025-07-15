@@ -93,6 +93,21 @@ class FilterState: ObservableObject {
     @Published var maxGPA: Double = 4.0
     @Published var searchText: String = ""
     
+    /// Returns true if any filters are currently active
+    var isFiltering: Bool {
+        return selectedSport != "All" ||
+               selectedLocation != "All" ||
+               selectedGraduationYear != "All" ||
+               selectedDivision != "All" ||
+               minUTR != 0.0 ||
+               maxUTR != 16.0 ||
+               minStars != 1 ||
+               maxStars != 5 ||
+               minGPA != 0.0 ||
+               maxGPA != 4.0 ||
+               !searchText.isEmpty
+    }
+    
     /// Resets all filters to their default values
     func resetFilters() {
         selectedSport = "All"

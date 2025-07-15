@@ -8,10 +8,56 @@
 /// A view to display a list of players, which can be filtered.
 ///
 import SwiftUI
+import Foundation
 
 struct PlayersListView: View {
-    // Sample data for the list
-    let players = [samplePlayer, samplePlayer2, samplePlayer3]
+    // Sample data for the list - created directly to avoid type inference issues
+    var players: [Player] {
+        return [
+            Player(
+                firstName: "Aaron",
+                lastName: "Sandler",
+                profileImageName: "aaron_sandler",
+                sport: "Tennis",
+                graduationYear: 2025,
+                highSchool: "The Wharton School",
+                location: "Huntingdon Valley, PA",
+                utr: 12.5,
+                stars: 5,
+                gpa: 4.0,
+                videos: ["video1", "video2"],
+                upcomingEvents: ["Boys 18s Clay Court Nationals", "Showcase at UPenn"]
+            ),
+            Player(
+                firstName: "Stephan",
+                lastName: "Gershfeld",
+                profileImageName: "stephan_gershfeld",
+                sport: "Tennis",
+                graduationYear: 2026,
+                highSchool: "Some High School",
+                location: "Philadelphia, PA",
+                utr: 12.8,
+                stars: 5,
+                gpa: 3.9,
+                videos: ["video3"],
+                upcomingEvents: ["NCAA Championships"]
+            ),
+            Player(
+                firstName: "Parashar",
+                lastName: "Bharadwaj",
+                profileImageName: "parashar_bharadwaj",
+                sport: "Tennis",
+                graduationYear: 2027,
+                highSchool: "Mission San Jose High",
+                location: "Fremont, CA",
+                utr: 11.5,
+                stars: 4,
+                gpa: 3.8,
+                videos: [],
+                upcomingEvents: ["USTA Sectionals"]
+            )
+        ]
+    }
     @State private var searchText = ""
     @StateObject private var filterState = FilterState()
     @State private var showingFilters = false
@@ -25,7 +71,7 @@ struct PlayersListView: View {
         // Apply advanced filters
         return searchedPlayers.filter { player in
             let utrCondition = player.utr >= filterState.minUTR && player.utr <= filterState.maxUTR
-            let gradYearCondition = filterState.selectedGradYear == nil || player.graduationYear == filterState.selectedGradYear
+            let gradYearCondition = filterState.selectedGraduationYear == "All" || String(player.graduationYear) == filterState.selectedGraduationYear
             return utrCondition && gradYearCondition
         }
     }

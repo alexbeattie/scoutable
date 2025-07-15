@@ -412,7 +412,7 @@ struct VideoDetailsView: View {
                         Spacer()
                         DetailItem(icon: "doc", title: "Size", value: video.formattedFileSize)
                         Spacer()
-                        DetailItem(icon: "calendar", title: "Uploaded", value: video.uploadDate, style: .relative)
+                        DetailItem(icon: "calendar", title: "Uploaded", value: video.uploadDate, style: Date.RelativeFormatStyle(presentation: .named, unitsStyle: .wide))
                     }
                 }
                 
