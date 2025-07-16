@@ -240,6 +240,222 @@ struct EventAnalytics: Identifiable {
     let dateRange: DateInterval
 }
 
+// MARK: - Authentication Models
+
+/// Represents a user in the Scoutable system
+struct User: Identifiable, Codable {
+    let id = UUID()
+    let email: String
+    let username: String
+    let firstName: String
+    let lastName: String
+    let role: UserRole
+    let profileImageURL: String?
+    let bio: String?
+    let location: String?
+    let sport: String?
+    let graduationYear: String?
+    let school: String?
+    let isVerified: Bool
+    let isOnline: Bool
+    let lastSeen: Date
+    let createdAt: Date
+    let updatedAt: Date
+    
+    var fullName: String {
+        return "\(firstName) \(lastName)"
+    }
+    
+    var displayName: String {
+        return username.isEmpty ? fullName : username
+    }
+}
+
+/// User roles in the system
+enum UserRole: String, CaseIterable, Codable {
+    case player = "Player"
+    case coach = "Coach"
+    case schoolAdmin = "School Admin"
+    case admin = "Admin"
+    
+    var icon: String {
+        switch self {
+        case .player: return "person.fill"
+        case .coach: return "person.badge.shield.checkmark"
+        case .schoolAdmin: return "building.2"
+        case .admin: return "person.3.sequence"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .player: return .blue
+        case .coach: return .green
+        case .schoolAdmin: return .orange
+        case .admin: return .purple
+        }
+    }
+    
+    var permissions: [Permission] {
+        switch self {
+        case .player:
+            return [.viewProfiles, .sendMessages, .rsvpEvents, .uploadVideos]
+        case .coach:
+            return [.viewProfiles, .sendMessages, .rsvpEvents, .createEvents, .viewAnalytics]
+        case .schoolAdmin:
+            return [.viewProfiles, .sendMessages, .rsvpEvents, .createEvents, .viewAnalytics, .manageUsers, .manageSchool]
+        case .admin:
+            return Permission.allCases
+        }
+    }
+}
+
+/// System permissions
+enum Permission: String, CaseIterable, Codable {
+    case viewProfiles = "View Profiles"
+    case sendMessages = "Send Messages"
+    case rsvpEvents = "RSVP to Events"
+    case uploadVideos = "Upload Videos"
+    case createEvents = "Create Events"
+    case viewAnalytics = "View Analytics"
+    case manageUsers = "Manage Users"
+    case manageSchool = "Manage School"
+    case adminAccess = "Admin Access"
+}
+
+/// Authentication state
+enum AuthState {
+    case notAuthenticated
+    case authenticating
+    case authenticated(User)
+    case error(String)
+}
+
+/// Social authentication providers
+enum AuthProvider: String, CaseIterable {
+    case email = "Email"
+    case apple = "Apple"
+    case google = "Google"
+    case facebook = "Facebook"
+    
+    var icon: String {
+        switch self {
+        case .email: return "envelope"
+        case .apple: return "applelogo"
+        case .google: return "globe"
+        case .facebook: return "person.2"
+        }
+    }
+}
+
+// MARK: - Messaging Models
+
+/// Represents a chat conversation
+struct Chat: Identifiable, Codable {
+    let id = UUID()
+    let participants: [UUID] // User IDs
+    let lastMessage: Message?
+    let unreadCount: Int
+    let isGroupChat: Bool
+    let groupName: String?
+    let groupImageURL: String?
+    let createdAt: Date
+    let updatedAt: Date
+    
+    var displayName: String {
+        if isGroupChat {
+            return groupName ?? "Group Chat"
+        } else {
+            // In a real app, you'd look up the other participant's name
+            return "Direct Message"
+        }
+    }
+}
+
+/// Represents a message in a chat
+struct Message: Identifiable, Codable {
+    let id = UUID()
+    let chatId: UUID
+    let senderId: UUID
+    let content: String
+    let messageType: MessageType
+    let status: MessageStatus
+    let timestamp: Date
+    let editedAt: Date?
+    let replyToMessageId: UUID?
+    
+    var isEdited: Bool {
+        return editedAt != nil
+    }
+}
+
+/// Types of messages
+enum MessageType: String, CaseIterable, Codable {
+    case text = "Text"
+    case image = "Image"
+    case video = "Video"
+    case file = "File"
+    case location = "Location"
+    case event = "Event"
+    case profile = "Profile"
+    
+    var icon: String {
+        switch self {
+        case .text: return "text.bubble"
+        case .image: return "photo"
+        case .video: return "video"
+        case .file: return "doc"
+        case .location: return "location"
+        case .event: return "calendar"
+        case .profile: return "person"
+        }
+    }
+}
+
+/// Message status
+enum MessageStatus: String, CaseIterable, Codable {
+    case sending = "Sending"
+    case sent = "Sent"
+    case delivered = "Delivered"
+    case read = "Read"
+    case failed = "Failed"
+    
+    var icon: String {
+        switch self {
+        case .sending: return "clock"
+        case .sent: return "checkmark"
+        case .delivered: return "checkmark.2"
+        case .read: return "checkmark.2.fill"
+        case .failed: return "xmark"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .sending: return .orange
+        case .sent: return .blue
+        case .delivered: return .blue
+        case .read: return .green
+        case .failed: return .red
+        }
+    }
+}
+
+/// Message attachment
+struct MessageAttachment: Identifiable, Codable {
+    let id = UUID()
+    let messageId: UUID
+    let type: AttachmentType
+    let url: String
+    let filename: String
+    let size: Int
+    let thumbnailURL: String?
+    
+    enum AttachmentType: String, Codable {
+        case image, video, file, audio
+    }
+}
+
 // MARK: - Filter State Management
 
 /// Manages the filtering and search state across the app

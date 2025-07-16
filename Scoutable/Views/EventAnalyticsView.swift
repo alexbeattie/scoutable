@@ -468,7 +468,7 @@ struct PerformanceInsightsSection: View {
             recommendations.append("Add more visual content and details")
         }
         
-        if analytics.goingCount < analytics.rsvpCount * 0.7 {
+        if analytics.goingCount < analytics.rsvpCount * Int(0.7) {
             recommendations.append("Follow up with 'maybe' responses")
         }
         

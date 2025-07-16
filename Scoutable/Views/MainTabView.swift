@@ -5,18 +5,18 @@
 //  Created by Alex Beattie on 7/14/25.
 //
 //  AI Cursor Context:
-//  This is the primary navigation container for the Scoutable app after onboarding.
+//  This is the primary navigation container for the Scoutable app after authentication.
 //  It uses a TabView to organize the main sections of the app:
 //  
 //  Navigation Structure:
 //  - Home Feed: Social media-style feed with posts from athletes, coaches, and schools
+//  - Messages: Real-time messaging and chat functionality
 //  - Players: Browse and filter athletes by various criteria (sport, location, stats)
-//  - Coaches: Browse coaches and their school affiliations
-//  - Schools: Browse educational institutions and their athletic programs
+//  - Events: Browse and manage events, tournaments, and camps
 //  - Profile: User's personal profile and settings
 //
 //  User Flow:
-//  1. User completes onboarding and selects their user type
+//  1. User completes authentication and enters the main app
 //  2. MainTabView becomes the root navigation container
 //  3. Users can switch between tabs to access different sections
 //  4. Each tab may contain nested navigation for detailed views
@@ -32,8 +32,26 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @StateObject private var messagingManager = MessagingManager.shared
+    @StateObject private var authManager = AuthManager.shared
+    
     var body: some View {
         TabView {
+            // MARK: - Home Tab
+            HomeFeedView()
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+            
+            // MARK: - Messages Tab
+            ChatListView()
+                .tabItem {
+                    Image(systemName: "message")
+                    Text("Messages")
+                }
+                .badge(messagingManager.getChats().reduce(0) { $0 + $1.unreadCount })
+            
             // MARK: - Players Tab
             PlayersListView()
                 .tabItem {
@@ -48,26 +66,17 @@ struct MainTabView: View {
                     Text("Events")
                 }
             
-            // MARK: - Coaches Tab
-            CoachesListView()
+            // MARK: - Profile Tab
+            UserProfileView()
                 .tabItem {
-                    Image(systemName: "person.badge.shield.checkmark")
-                    Text("Coaches")
+                    Image(systemName: "person.circle")
+                    Text("Profile")
                 }
-            
-            // MARK: - Schools Tab
-            SchoolsListView()
-                .tabItem {
-                    Image(systemName: "building.2")
-                    Text("Schools")
-                }
-            
-            // MARK: - Analytics Tab
-            AnalyticsDashboardView()
-                .tabItem {
-                    Image(systemName: "chart.bar")
-                    Text("Analytics")
-                }
+        }
+        .onAppear {
+            if let currentUser = authManager.currentUser {
+                messagingManager.setCurrentUser(currentUser.id)
+            }
         }
     }
 }
