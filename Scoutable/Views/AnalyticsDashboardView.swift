@@ -47,13 +47,13 @@ struct AnalyticsDashboardView: View {
                     RSVPBreakdownChart(analytics: getCurrentAnalytics())
                     
                     // Engagement metrics
-                    EngagementMetricsSection(analytics: getCurrentAnalytics())
+                    DashboardEngagementMetricsSection(analytics: getCurrentAnalytics().first)
                     
                     // Top performing events
                     TopEventsSection(events: eventManager.events)
                     
                     // Traffic sources
-                    TrafficSourcesSection(analytics: getCurrentAnalytics())
+                    DashboardTrafficSourcesSection(analytics: getCurrentAnalytics().first)
                 }
                 .padding()
             }
@@ -345,8 +345,8 @@ struct RSVPChartData {
 }
 
 /// Engagement metrics section
-struct EngagementMetricsSection: View {
-    let analytics: [EventAnalytics]
+struct DashboardEngagementMetricsSection: View {
+    let analytics: EventAnalytics?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -354,48 +354,38 @@ struct EngagementMetricsSection: View {
                 .font(.headline)
                 .fontWeight(.semibold)
             
-            VStack(spacing: 12) {
-                EngagementRow(
-                    title: "Average Time on Page",
-                    value: "\(String(format: "%.0f", averageEngagementTime / 60)) minutes",
-                    icon: "clock",
-                    color: .blue
-                )
-                
-                EngagementRow(
-                    title: "Bounce Rate",
-                    value: "\(String(format: "%.1f", bounceRate))%",
-                    icon: "arrow.up.arrow.down",
-                    color: .orange
-                )
-                
-                EngagementRow(
-                    title: "Return Visitors",
-                    value: "\(String(format: "%.1f", returnVisitorRate))%",
-                    icon: "person.2.circle",
-                    color: .green
-                )
+            if let analytics = analytics {
+                VStack(spacing: 12) {
+                    EngagementRow(
+                        title: "Average Time on Page",
+                        value: "\(String(format: "%.0f", analytics.averageEngagementTime / 60)) minutes",
+                        icon: "clock",
+                        color: .blue
+                    )
+                    
+                    EngagementRow(
+                        title: "Bounce Rate",
+                        value: "35.2%", // Mock value
+                        icon: "arrow.up.arrow.down",
+                        color: .orange
+                    )
+                    
+                    EngagementRow(
+                        title: "Return Visitors",
+                        value: "28.7%", // Mock value
+                        icon: "person.2.circle",
+                        color: .green
+                    )
+                }
+            } else {
+                Text("No engagement data available.")
+                    .foregroundColor(.secondary)
             }
         }
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-    }
-    
-    private var averageEngagementTime: TimeInterval {
-        guard !analytics.isEmpty else { return 0 }
-        return analytics.reduce(0) { $0 + $1.averageEngagementTime } / Double(analytics.count)
-    }
-    
-    private var bounceRate: Double {
-        // Mock calculation - in real app this would be actual bounce rate
-        return 35.2
-    }
-    
-    private var returnVisitorRate: Double {
-        // Mock calculation - in real app this would be actual return visitor rate
-        return 28.7
     }
 }
 
@@ -473,8 +463,8 @@ struct TopEventsSection: View {
 }
 
 /// Traffic sources section
-struct TrafficSourcesSection: View {
-    let analytics: [EventAnalytics]
+struct DashboardTrafficSourcesSection: View {
+    let analytics: EventAnalytics?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -482,23 +472,28 @@ struct TrafficSourcesSection: View {
                 .font(.headline)
                 .fontWeight(.semibold)
             
-            VStack(spacing: 12) {
-                ForEach(trafficSources, id: \.source) { data in
-                    HStack {
-                        Text(data.source)
-                            .font(.subheadline)
-                        
-                        Spacer()
-                        
-                        Text("\(data.count)")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        
-                        Text("(\(String(format: "%.1f", data.percentage))%)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+            if let analytics = analytics, !analytics.topReferrers.isEmpty {
+                VStack(spacing: 12) {
+                    ForEach(trafficSources, id: \.source) { data in
+                        HStack {
+                            Text(data.source)
+                                .font(.subheadline)
+                            
+                            Spacer()
+                            
+                            Text("\(data.count)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            
+                            Text("(\(String(format: "%.1f", data.percentage))%)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
+            } else {
+                Text("No traffic data available.")
+                    .foregroundColor(.secondary)
             }
         }
         .padding()
@@ -508,17 +503,11 @@ struct TrafficSourcesSection: View {
     }
     
     private var trafficSources: [TrafficSourceData] {
-        let totalViews = analytics.reduce(0) { $0 + $1.totalViews }
+        guard let analytics = analytics else { return [] }
+        let totalViews = analytics.totalViews
         guard totalViews > 0 else { return [] }
         
-        var sources: [String: Int] = [:]
-        for analytics in analytics {
-            for (source, count) in analytics.topReferrers {
-                sources[source, default: 0] += count
-            }
-        }
-        
-        return sources.map { source, count in
+        return analytics.topReferrers.map { source, count in
             TrafficSourceData(
                 source: source,
                 count: count,
