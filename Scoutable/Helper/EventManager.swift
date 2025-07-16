@@ -167,7 +167,11 @@ class EventManager: ObservableObject {
             ekEvent.location = "\(event.venue), \(event.location)"
             ekEvent.startDate = event.startDate
             ekEvent.endDate = event.endDate
-            ekEvent.calendar = eventStore.defaultCalendarForNewEvents
+            
+            // Set calendar if available
+            if let defaultCalendar = eventStore.defaultCalendarForNewEvents {
+                ekEvent.calendar = defaultCalendar
+            }
             
             try eventStore.save(ekEvent, span: .thisEvent)
             
