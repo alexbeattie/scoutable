@@ -54,7 +54,7 @@ struct UserProfileView: View {
                 }
             }
             .sheet(isPresented: $showingEditProfile) {
-                EditProfileView()
+                UserEditProfileView()
             }
             .sheet(isPresented: $showingChangePassword) {
                 ChangePasswordView()
@@ -416,8 +416,8 @@ struct SettingsRowView: View {
     }
 }
 
-/// Edit profile view
-struct EditProfileView: View {
+/// User profile edit view
+struct UserEditProfileView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var authManager = AuthManager.shared
     @State private var firstName = ""

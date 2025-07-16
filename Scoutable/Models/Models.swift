@@ -354,13 +354,13 @@ enum AuthProvider: String, CaseIterable {
 struct Chat: Identifiable, Codable {
     let id = UUID()
     let participants: [UUID] // User IDs
-    let lastMessage: Message?
-    let unreadCount: Int
+    var lastMessage: Message?
+    var unreadCount: Int
     let isGroupChat: Bool
     let groupName: String?
     let groupImageURL: String?
     let createdAt: Date
-    let updatedAt: Date
+    var updatedAt: Date
     
     var displayName: String {
         if isGroupChat {
@@ -379,9 +379,9 @@ struct Message: Identifiable, Codable {
     let senderId: UUID
     let content: String
     let messageType: MessageType
-    let status: MessageStatus
+    var status: MessageStatus
     let timestamp: Date
-    let editedAt: Date?
+    var editedAt: Date?
     let replyToMessageId: UUID?
     
     var isEdited: Bool {

@@ -63,13 +63,13 @@ struct ChatListView: View {
                     // Filter buttons
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(ChatFilter.allCases, id: \.self) { filter in
-                                FilterButton(
-                                    filter: filter,
-                                    isSelected: selectedFilter == filter,
-                                    action: { selectedFilter = filter }
-                                )
-                            }
+                                                    ForEach(ChatFilter.allCases, id: \.self) { filter in
+                            ChatFilterButton(
+                                filter: filter,
+                                isSelected: selectedFilter == filter,
+                                action: { selectedFilter = filter }
+                            )
+                        }
                         }
                         .padding(.horizontal, 16)
                     }
@@ -276,8 +276,8 @@ struct ChatAvatarView: View {
     }
 }
 
-/// Filter button component
-struct FilterButton: View {
+/// Chat filter button component
+struct ChatFilterButton: View {
     let filter: ChatListView.ChatFilter
     let isSelected: Bool
     let action: () -> Void
