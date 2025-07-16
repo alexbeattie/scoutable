@@ -56,39 +56,31 @@ class EventManager: ObservableObject {
             errorMessage = nil
         }
         
-        do {
-            let newEvent = Event(
-                title: title,
-                description: description,
-                eventType: eventType,
-                sport: sport,
-                location: location,
-                venue: venue,
-                startDate: startDate,
-                endDate: endDate,
-                registrationDeadline: registrationDeadline,
-                maxParticipants: maxParticipants,
-                currentParticipants: 0,
-                entryFee: entryFee,
-                organizer: organizer,
-                organizerContact: organizerContact,
-                isPublic: isPublic,
-                tags: tags,
-                imageURL: nil,
-                createdAt: Date(),
-                updatedAt: Date()
-            )
-            
-            await MainActor.run {
-                events.append(newEvent)
-                isCreatingEvent = false
-            }
-            
-        } catch {
-            await MainActor.run {
-                errorMessage = "Failed to create event: \(error.localizedDescription)"
-                isCreatingEvent = false
-            }
+        let newEvent = Event(
+            title: title,
+            description: description,
+            eventType: eventType,
+            sport: sport,
+            location: location,
+            venue: venue,
+            startDate: startDate,
+            endDate: endDate,
+            registrationDeadline: registrationDeadline,
+            maxParticipants: maxParticipants,
+            currentParticipants: 0,
+            entryFee: entryFee,
+            organizer: organizer,
+            organizerContact: organizerContact,
+            isPublic: isPublic,
+            tags: tags,
+            imageURL: nil,
+            createdAt: Date(),
+            updatedAt: Date()
+        )
+        
+        await MainActor.run {
+            events.append(newEvent)
+            isCreatingEvent = false
         }
     }
     
