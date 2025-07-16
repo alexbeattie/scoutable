@@ -34,47 +34,41 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            // MARK: - Home Feed Tab
-            HomeFeedView()
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Home")
-                }
-                .accessibilityLabel("Home feed with posts and updates")
-            
             // MARK: - Players Tab
             PlayersListView()
                 .tabItem {
-                    Image(systemName: "person.3.fill")
+                    Image(systemName: "person.2")
                     Text("Players")
                 }
-                .accessibilityLabel("Browse and filter athletes")
+            
+            // MARK: - Events Tab
+            EventsListView()
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("Events")
+                }
             
             // MARK: - Coaches Tab
             CoachesListView()
                 .tabItem {
-                    Image(systemName: "person.2.fill")
+                    Image(systemName: "person.badge.shield.checkmark")
                     Text("Coaches")
                 }
-                .accessibilityLabel("Browse coaches and schools")
             
             // MARK: - Schools Tab
             SchoolsListView()
                 .tabItem {
-                    Image(systemName: "building.2.fill")
+                    Image(systemName: "building.2")
                     Text("Schools")
                 }
-                .accessibilityLabel("Browse educational institutions")
             
-            // MARK: - Profile Tab
-            PlayerProfileView(player: samplePlayer)
+            // MARK: - Analytics Tab
+            AnalyticsDashboardView()
                 .tabItem {
-                    Image(systemName: "person.circle.fill")
-                    Text("Profile")
+                    Image(systemName: "chart.bar")
+                    Text("Analytics")
                 }
-                .accessibilityLabel("Your personal profile and settings")
         }
-        .accentColor(.blue) // Primary brand color
     }
 }
 
